@@ -4,7 +4,7 @@
       <span />
       Menemukan bug? atau ingin berkontribusi? kunjungi
       <a
-        href="https://github.com/phpid-jakarta/phpid-online-learning-2020/"
+        href="https://github.com/phpid-jakarta/phpid-learning/"
         target="_blank"
         rel="noopener"
         title="Github">
@@ -12,9 +12,17 @@
       </a>
     </div>
   </section>
-  <section class="row flex-center">
+  <section class="row flex-center margin-bottom-large">
     <div class="text-center">
-      <span>Crafted with ❤️ by PHPID Dev Teams, © 2020</span>
+      <span>Dibangun oleh Tim PHPID dan
+        <a
+           href="https://github.com/phpid-jakarta/phpid-learning/graphs/contributors"
+           target="_blank"
+           rel="noopener"
+           title="Github"
+        >
+          banyak kontributor keren
+        </a>, © 2020 - sekarang</span>
     </div>
   </section>
 </footer>

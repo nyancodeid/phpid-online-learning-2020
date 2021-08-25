@@ -1,9 +1,11 @@
 <script>
   import { onMount } from "svelte";
+  import Tags from "./Tags.svelte";
+
   export let item;
 
   let src =
-    "https://github.com/phpid-jakarta/phpid-online-learning-2020/raw/master/cover/default.jpg";
+    "https://github.com/phpid-jakarta/phpid-learning/raw/master/cover/default.jpg";
   let loaded = false;
   let observer = null;
 
@@ -11,15 +13,24 @@
     entries.forEach(node => {
       if (!node.isIntersecting) return false;
 
-      node.target.onload = () => {
+      const img = document.createElement("img");
+      img.classList.add("is--loading");
+      img.classList.add("card-image");
+
+      img.onload = () => {
         loaded = true;
+        img.classList.remove("is--loading");
+        img.classList.add("is--loaded");
 
         window.__macy &&
           window.__macy.recalculate &&
           window.__macy.recalculate(true);
       };
 
-      node.target.src = item.cover;
+      img.setAttribute("src", item.cover);
+      img.setAttribute("alt", item.topic);
+
+      node.target.appendChild(img);
 
       observer && observer.unobserve(node.target);
     });
@@ -48,47 +59,53 @@
       margin-right: 13px;
     }
   }
-  .card-image {
+  .card-image-wrapper {
     width: auto;
     min-height: 200px;
-    object-fit: cover;
-    transition: filter .3s linear;
+    background: #212121;
   }
-  .card-image.is--loading {
-    filter: blur(5px);
-  }
-  .card-image.is--loaded {
-    transition-delay: .5s;
-    filter: blur(0);
-  }
-  .card-title, .card-subtitle {
+  .card-title,
+  .card-subtitle {
     font-family: "Neucha", sans-serif;
   }
-  .card .card-body {
+  .card-body {
     min-height: 200px;
     background: white;
   }
-
-  .card .card-body button {
-    margin: 5px;
-  }
-
-  .card .card-body a + a {
+  .card-action {
     margin: 0;
+  }
+  .card-body .card-action button {
+    margin: 5px 5px 0 0;
+  }
+  .badge-group {
+    margin-bottom: 1em;
   }
 </style>
 
 <div class="card">
-  <img class="card-image {loaded ? 'is--loaded' : 'is--loading'} js-image--{item.id}" data-src={item.cover} {src} alt={item.topic} />
+  <div class="card-image-wrapper js-image--{item.id}" />
   <div class="card-body">
-    <span class="badge secondary" style="margin-right: .5em">{item.date}</span>
-    <span class="badge success">{item.time} WIB</span>
+    <div class="badge-group">
+      <span class="badge warning" style="margin-right: .25em">#{item.id}</span>
+      <span class="badge secondary" style="margin-right: .25em">
+        {item.date}
+      </span>
+      <span class="badge success">{item.time} WIB</span>
+    </div>
+
     <h4 class="card-title">{item.topic}</h4>
     <h5 class="card-subtitle">{item.speaker}</h5>
+
+    {#if item.tags && item.tags.length > 0}
+      <Tags tags={item.tags} />
+    {/if}
+
     <div class="card-text">
       {#if item.videos[0] && item.videos[0] !== 'empty'}
         <a
           href={item.videos[0]}
+          class="card-action"
           target="_blank"
           rel="noopener"
           style="background-image: none"
@@ -100,6 +117,7 @@
       {#if item.registrasi && item.registrasi !== 'empty'}
         <a
           href={item.registrasi}
+          class="card-action"
           target="_blank"
           rel="noopener"
           style="background-image: none"
@@ -111,6 +129,7 @@
       {#if item.slide && item.slide !== 'empty'}
         <a
           href={item.slide}
+          class="card-action"
           target="_blank"
           rel="noopener"
           style="background-image: none"

@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const REGEX_SECTIONS = /^\#{3}.*\n\n- Waktu.*\n- Pukul.*\n- Pemateri.*\n- Slide.*\n- Video.*\n- Registrasi.*\n- Sesi.*\n- Deskripsi.*\n/gm
+const REGEX_SECTIONS = /^\#{3}.*\n\n- Waktu.*\n- Pukul.*\n- Pemateri.*\n- Slide.*\n- Video.*\n- Registrasi.*\n- Sesi.*\n- Kategori.*\n- Deskripsi.*\n/gm
 const REGEX_TITLE = /^\#{3}.*/gm
 const REGEX_DATE = /^- Waktu.*/gm
 const REGEX_TIME = /^- Pukul.*/gm
@@ -10,6 +10,7 @@ const REGEX_SLIDE = /^- Slide.*/gm
 const REGEX_VIDEO = /^- Video.*/gm
 const REGEX_REGISTRASI = /^- Registrasi.*/gm
 const REGEX_SESI = /^- Sesi.*/gm
+const REGEX_KATEGORI = /^- Kategori.*/gm
 const REGEX_DESKRIPSI = /^- Deskripsi.*/gm
 
 const writeFile = (pathFile, contentString) => {
@@ -25,7 +26,7 @@ const writeFile = (pathFile, contentString) => {
 }
 
 const getCoverUrl = (idx) => {
-  const basePathImage = 'https://github.com/phpid-jakarta/phpid-online-learning-2020/raw/master/cover'
+  const basePathImage = 'https://github.com/phpid-jakarta/phpid-learning/raw/master/cover'
   const filePath = path.resolve(`./cover/${idx}.jpg`)
   if (fs.existsSync(filePath)) {
     return `${basePathImage}/${idx}.jpg`
@@ -68,7 +69,8 @@ const main = async () => {
         const sesi = getContent(ctx, REGEX_SESI, '- Sesi:')
         const cover = getCoverUrl(sesi)
         const deskripsi = getContent(ctx, REGEX_DESKRIPSI, '- Deskripsi:')
-
+        const kategori = getContent(ctx, REGEX_KATEGORI, '- Kategori:')
+        const tags = kategori.split(',').map(i => i.trim().replace('/', '-').replace(' ', '-'))
         const data = {
           id: sesi,
           date: date,
@@ -79,7 +81,8 @@ const main = async () => {
           videos: videos,
           registrasi: register,
           cover: cover,
-          deskripsi: deskripsi
+          deskripsi: deskripsi,
+          tags: tags
         }
 
         allData.push(data)
@@ -93,22 +96,24 @@ const main = async () => {
         console.log('🚪 ', register)
         console.log('📽️ ', videos)
         console.log('📕 ', deskripsi)
+        console.log('🏷 ', tags)
         console.log('\n-----------------------------\n')
       }
     })
 
     const fileContent = {
       meta: {
-        last_updated: new Date(),
+        last_updated: new Date().toISOString().substring(0, 10),
         total: allData.length,
-        credits: 'PHPID Community'
+        credits: 'PHPID Community',
+        ui: 'https://s.byphp.id/learning'
       },
       data: allData
     }
 
     writeFile('./data.json', JSON.stringify(fileContent))
-    writeFile('./data.js', `module.exports = ${JSON.stringify(fileContent)}`)
-    writeFile('./data-es.js', `export default ${JSON.stringify(fileContent)}`)
+    writeFile('./data.js', `module.exports = ${JSON.stringify(fileContent, null, 2)}`)
+    writeFile('./data-es.js', `export default ${JSON.stringify(fileContent, null, 2)}`)
   } catch (error) {
     console.error('❌ Error read file README.md', error)
   }

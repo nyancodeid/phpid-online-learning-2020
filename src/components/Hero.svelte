@@ -1,132 +1,203 @@
 <script>
-  import { allData } from "../store";
+  import { originData } from "../store";
 
-  const getDateOnly = (val = '') => {
+  const getDateOnly = (val = "") => {
     let res = val;
-    const arr = res.split(',')
+    const arr = res.split(",");
     if (arr && arr.length > 1) {
       res = arr[1].trim();
     }
     return res;
-  }
+  };
 
-  const dataLength = $allData.length;
-  const dataStart = getDateOnly($allData[0].date);
-  const dataEnd = getDateOnly($allData[dataLength - 1].date);
+  const dataLength = $originData.length;
+  const dataStart = getDateOnly($originData[dataLength - 1].date);
+  const dataEnd = getDateOnly($originData[0].date);
   const dateRange = `${dataStart} - ${dataEnd}`;
 </script>
 
 <style>
-.hero-image {
-  min-height: 100vh;
-  background: url('./assets/new_bg_hero.webp');
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: 500px;
-  position: relative;
-  background-color: #212121;
-}
+  .header {
+    margin-bottom: 2rem;
+  }
+  .hero-gradient {
+    min-height: 100vh;
+    position: relative;
 
-.hero-text {
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  color: #fff;
-  text-align: center;
-}
+    background-image: linear-gradient(to right, #f7e4a0, #fadf8e, #f5c04c);
+  }
 
-.hero-text h1 {
-  margin: 20px 0;
-  font-size: 2rem;
-  font-family: "Neucha", sans-serif;
-}
+  .hero-image{
+    width: 90%;
+    max-width: 400px;
+  }
 
-.hero-text h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-family: "Neucha", sans-serif;
-}
-
-.hero-text span {
-  display: block;
-  margin-bottom: 20px;
-}
-
-.hero-text button {
-  border: none;
-  outline: 0;
-  display: inline-block;
-  padding: 10px 25px;
-  color: black;
-  background-color: #ddd;
-  text-align: center;
-  cursor: pointer;
-  margin: 5px;
-}
-
-.hero-text button:hover {
-  background-color: #555;
-  color: white;
-}
-.hero-button {
-  display: flex;
-}
-.hero-arrow {
-  position: absolute;
-  bottom: 20px;
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  color: white;
-}
-
-.hero-arrow a {
-  text-decoration: none;
-  background-image: none;
-}
-
-.hero-arrow button {
-  border-color: white;
-  color: white;
-  margin-top: 20px;
-}
-
-@media only screen and (min-width: 700px) {
+  .hero-text {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+  }
   .hero-text h3 {
-    font-size: 1.8rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-family: "Neucha", sans-serif;
   }
 
-  .hero-text h1 {
-    font-size: 2.5rem;
+  .hero-text span {
+    display: block;
+    margin-bottom: 20px;
   }
-}
+
+  @media only screen and (min-width: 700px) {
+    .hero-text h3 {
+      font-size: 1.8rem;
+    }
+  }
+  .btn-wrapper {
+    z-index: 2;
+  }
+
+  .btn-wrapper > a:nth-child(1),
+  .btn-wrapper > a:nth-child(2) {
+    margin-right: auto;
+  }
+
+  /*For desktop*/
+  @media (min-width: 768px) {
+    .btn-wrapper > a:nth-child(1),
+    .btn-wrapper > a:nth-child(2) {
+      margin-right: 0.5em;
+    }
+  }
+
+  .waves {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 70px;
+    margin-top: -70px;
+    /*Fix for safari gap*/
+    min-height: 70px;
+  }
+
+  /*Shrinking for mobile*/
+  @media (max-width: 768px) {
+    .waves {
+      height: 40px;
+      min-height: 40px;
+      margin-top: -40px;
+    }
+  }
+
+  /* Animation */
+  .parallax > use {
+    animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+  }
+
+  .parallax > use:nth-child(1) {
+    animation-delay: -2s;
+    animation-duration: 7s;
+  }
+
+  .parallax > use:nth-child(2) {
+    animation-delay: -3s;
+    animation-duration: 10s;
+  }
+
+  .parallax > use:nth-child(3) {
+    animation-delay: -4s;
+    animation-duration: 13s;
+  }
+
+  .parallax > use:nth-child(4) {
+    animation-delay: -5s;
+    animation-duration: 20s;
+  }
+
+  @keyframes move-forever {
+    0% {
+      transform: translate3d(-90px, 0, 0);
+    }
+
+    100% {
+      transform: translate3d(85px, 0, 0);
+    }
+  }
 </style>
 
 <header class="header">
-  <div class="hero-image">
+  <div class="hero-gradient">
     <div class="hero-text">
-      <h1 class="animate__animated animate__bounce">PHPID Online Learning 2020</h1>
-      <h3 class="animate__animated animate__bounce">{$allData.length} Materi</h3>
-      <span class="animate__animated animate__bounce">{dateRange}</span>
-      <div class="hero-button">
-        <a href="https://github.com/phpid-jakarta/phpid-online-learning-2020/" target="_blank" rel="noopener" title="Github">
-          <button class="animate__animated animate__bounceIn">Github</button>
+      <img class="hero-image" src="/phpid-learning-logo-small.jpg" alt="PHPID Online Learning" />
+      <h3>
+        Tersedia
+        <b>{$originData.length}</b>
+        webinar gratis
+      </h3>
+      <span>{dateRange}</span>
+      <div class="row flex-center btn-wrapper">
+        <a
+          href="https://s.byphp.id/jadi-pemateri"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Github"
+          class="paper-btn btn-secondary">
+          Daftar jadi speaker
         </a>
-        <a href="https://www.facebook.com/groups/phpid/" target="_blank" rel="noopener" title="Facebook Group PHPID">
-          <button class="btn-secondary animate__animated animate__bounceIn">FB Group</button>
+        <a
+          href="https://s.byphp.id/fb"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Facebook Group PHPID"
+          class="paper-btn btn-secondary-outline">
+          FB Group
+        </a>
+        <a
+          href="https://s.byphp.id/donasi"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Donasi"
+          class="paper-btn btn-success-outline">
+          Bantu donasi
         </a>
       </div>
     </div>
-    <div class="hero-arrow">
-      <span class="animate__animated animate__bounceIn animate__delay-1s">Lihat Semua Pemateri</span>
-      <a href="#content-speaker">
-        <button class="animate__animated animate__bounceIn animate__delay-1s">&darr;</button>
-      </a>
-    </div>
+    <svg
+      class="waves"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      viewBox="0 24 150 28"
+      preserveAspectRatio="none"
+      shape-rendering="auto">
+      <defs>
+        <path
+          id="gentle-wave"
+          d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18
+          v44h-352z" />
+      </defs>
+      <g class="parallax">
+        <use
+          xlink:href="#gentle-wave"
+          x="48"
+          y="0"
+          fill="rgba(255,255,255,0.7" />
+        <use
+          xlink:href="#gentle-wave"
+          x="48"
+          y="3"
+          fill="rgba(255,255,255,0.5)" />
+        <use
+          xlink:href="#gentle-wave"
+          x="48"
+          y="5"
+          fill="rgba(255,255,255,0.3)" />
+        <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+      </g>
+    </svg>
   </div>
 </header>

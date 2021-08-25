@@ -1,5 +1,6 @@
-import * as sapper from '@sapper/app'
+import * as sapper from '@sapper/app';
+// import './styles/global.less'
 
 sapper.start({
-  target: document.querySelector('#sapper')
-})
+	target: document.querySelector('#sapper')
+});
